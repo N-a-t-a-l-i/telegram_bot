@@ -9,7 +9,7 @@ import random
 from functions import kb_parts_of_speech, dictionary, button_symbols, buttons_text
 
 
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot('5190118002:AAGM1A41EYRaD9zZlv8-pKDD-Ph3hg1smzo')
 
 
 @bot.message_handler(commands=["start"])
