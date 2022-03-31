@@ -4,7 +4,6 @@
 import telebot
 from telebot import types
 from constants import *
-from token import TOKEN
 import random
 from functions import kb_parts_of_speech, dictionary, button_symbols, buttons_text
 
