@@ -6,9 +6,11 @@ from telebot import types
 from constants import *
 import random
 from functions import kb_parts_of_speech, dictionary, button_symbols, buttons_text
+import os
 
 
-bot = telebot.TeleBot('5190118002:AAGM1A41EYRaD9zZlv8-pKDD-Ph3hg1smzo')
+TOKEN = os.environ['TOKEN']
+bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=["start"])

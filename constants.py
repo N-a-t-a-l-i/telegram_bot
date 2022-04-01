@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 
-verbs_vars = [{'нАчал': 'correct', 'начАл,': 'incorrect'},
+verbs_vars = [{'нАчал': 'correct', 'начАл': 'incorrect'},
               {'надорвалАсь': 'correct', 'надорвАлась': 'incorrect'},
               {'послАла': 'correct', 'послалА': 'incorrect'},
               {'сорИт': 'correct', 'сОрит': 'incorrect'},
