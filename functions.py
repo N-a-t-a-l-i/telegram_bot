@@ -144,4 +144,4 @@ def get_mistakes(user_id):
     return ret
 
 
-def create_file_results(user_id):
+#def create_file_results(user_id):
