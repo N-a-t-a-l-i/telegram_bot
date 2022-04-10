@@ -5,8 +5,19 @@ import telebot
 from telebot import types
 from constants import *
 import random
-from functions import kb_parts_of_speech, dictionary, button_symbols, buttons_text
+from functions import *
 import os
+import sqlite3
+
+
+cnt = 0
+number = 0
+word1 = ''
+word2 = ''
+data1 = ''
+data2 = ''
+current_list = []
+mistakes = []
 
 
 TOKEN = os.environ['TOKEN']
@@ -15,6 +26,7 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=["start"])
 def send_hello(message):
+    fill_results(message.from_user.id)
     kb = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
     bt1 = types.KeyboardButton(text='Открыть словарь')
     bt2 = types.KeyboardButton(text='Результаты тренировок')
@@ -48,16 +60,6 @@ def send_message(message):
         bot.send_message(message.from_user.id, 'Выбери режим тренировки', reply_markup=kb)
 
 
-cnt = 0
-number = 0
-word1 = ''
-word2 = ''
-data1 = ''
-data2 = ''
-current_list = []
-mistakes = []
-
-
 @bot.callback_query_handler(func=lambda callback: callback.data)
 def answer_callback(callback):
 
@@ -71,16 +73,15 @@ def answer_callback(callback):
 
     if callback.data in list(all_vars.keys()) or callback.data == 'mistakes':
         if callback.data == 'mistakes':
-            current_list = tuple(mistakes)
+            current_list = get_mistakes(callback.from_user.id)
             if len(current_list) == 0:
                 kb = kb_parts_of_speech()
                 bot.send_message(callback.from_user.id, 'У тебя пока нет ошибок, выбери другой раздел', reply_markup=kb)
                 return
         else:
-            current_list = all_vars[callback.data][0]
+            current_list = get_words(callback.data)
         cnt = 0
         number = len(current_list)
-
         current_pair = current_list[cnt]
         word1 = random.choice(list(current_pair.keys()))
         data1 = current_pair[word1]
@@ -108,20 +109,12 @@ def answer_callback(callback):
             correct_word = word2
 
         if callback.data == 'incorrect':
-            if new_dic not in mistakes:
-                mistakes.append(new_dic)
+            update_results_incorrect(callback.from_user.id, correct_word)
+            add_mistake(callback.from_user.id, correct_word)
 
-            for value in all_vars.values():
-                results = value[1]
-                if correct_word in results.keys():
-                    results[correct_word][1] += 1
         else:
-            if new_dic in mistakes:
-                mistakes.remove(new_dic)
-            for value in all_vars.values():
-                results = value[1]
-                if correct_word in results.keys():
-                    results[correct_word][0] += 1
+            update_results_correct(callback.from_user.id, correct_word)
+            remove_mistake(callback.from_user.id, correct_word)
 
         text = buttons_text(callback.data)
         symbol1, symbol2 = button_symbols(data1)
